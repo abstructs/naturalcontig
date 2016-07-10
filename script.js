@@ -6,8 +6,15 @@ var createDataSet = function() {
   }
   return data
 }
-
+var createGraph = function(data) {
+  var y = d3.scaleLinear()
+      .domain([0, 10])
+      .range([0, 100])
+  x = d3.scaleLinear()
+      .domain([0, 10])
+      .range([0, 100]);
+}
 $(function(){
-  var data = getData();
-  console.log(data)
+  var data = createDataSet();
+  createGraph(data);
 });
