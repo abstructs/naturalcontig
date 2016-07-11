@@ -27,28 +27,26 @@ var createGraph = function(data) {
 
   var margin = {top: 30, right: 50, bottom: 30, left: 50},
       width = 1000 - margin.left - margin.right,
-      height = 800 - margin.top - margin.bottom;
+      height = 650 - margin.top - margin.bottom;
 
   var svg = d3.select('body').select('svg');
 
   svg
-      .attr('height', height + 50)
+      .attr('height', height)
       .attr('width', width)
       .style('background-color', 'white')
 
   var simulation = d3.forceSimulation()
       .nodes(data.nodes)
       .force("link", d3.forceLink(data.links))
-      .force("charge", d3.forceManyBody(400).distanceMax(125))
-      .force("center", d3.forceCenter());
-
+      .force("charge", d3.forceManyBody().distanceMax(150).strength(-15))
+      .force("center", d3.forceCenter(width / 2, height / 2))
   var link = svg.selectAll('.link')
       .data(data.links)
       .enter().append('line')
       .attr('class', 'link')
       .attr('stroke-width', 1);
-  d3.forceX(500);
-  d3.forceY(500);
+
   var node = svg.selectAll('.node')
       .data(data.nodes)
       .enter().append('circle')
@@ -60,8 +58,8 @@ var createGraph = function(data) {
 
     simulation.on('tick', function() {
         node.attr('r', 2)
-            .attr('cx', function(d) { return d.x; })
-            .attr('cy', function(d) { return d.y; });
+            .attr("cx", function(d) { return d.x = Math.max(2, Math.min(width - 2, d.x)); })
+            .attr("cy", function(d) { return d.y = Math.max(2, Math.min(height - 2, d.y)); });
 
         link.attr('x1', function(d) { return d.source.x; })
             .attr('y1', function(d) { return d.source.y; })
