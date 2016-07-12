@@ -1,11 +1,5 @@
 var getData = function() {
-  return $.getJSON(
-    // python -m SimpleHTTPSever
-    "/countries.json",
-    function(json) {
-      return json
-    }
-  )
+  return $.getJSON("https://raw.githubusercontent.com/DealPete/forceDirected/master/countries.json")
 }
 var createGraph = function(data) {
   var dragstarted = function(d) {
@@ -35,12 +29,8 @@ var createGraph = function(data) {
   var svg = d3.select('body').select('svg');
   var div = d3.select('body').select('.graph');
 
-  svg
-      .attr('height', height)
-      .attr('width', width)
-  div
-      .style('height', height)
-      .style('width', width)
+  svg.attr('height', height.toString() + 'px').attr('width', width.toString() + 'px')
+  div.style('height', height.toString() + 'px').style('width', width.toString() + 'px')
 
 
   var simulation = d3.forceSimulation()
@@ -53,27 +43,27 @@ var createGraph = function(data) {
       .data(data.links)
       .enter().append('line')
       .attr('class', 'link')
-      .attr('stroke-width', 1);
+      .attr('stroke-width', '1px');
 
-  var node = div.selectAll('.node')
+  var node = d3.select('body').select('.graph').select('.flags').selectAll('.node')
       .data(data.nodes)
       .enter().append('img')
       .attr('class', function(d){ return 'node flag flag-' + d.code })
       .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended));
+      .on("start", dragstarted)
+      .on("drag", dragged)
+      .on("end", dragended));
 
     simulation.on('tick', function() {
-        node.attr('height', 6)
-            .attr('width', 8)
-            .style("left", function(d) { return d.x = Math.max(marginLeft, Math.min(width - 16, d.x) + marginLeft); })
-            .style("top", function(d) { return d.y = Math.max(marginTop, Math.min(height - 12, d.y) + marginTop); })
+      node.attr('height', '6px')
+          .attr('width', '8px')
+          .style("left", function(d) { return (d.x = Math.max(marginLeft, Math.min(width - 16, d.x) + marginLeft)).toString() + 'px' })
+          .style("top", function(d) { return (d.y = Math.max(marginTop, Math.min(height - 12, d.y) + marginTop)).toString() + 'px'; })
 
-        link.attr('x1', function(d) { return d.source.x + 4 - marginLeft; })
-            .attr('y1', function(d) { return d.source.y + 3 - marginTop; })
-            .attr('x2', function(d) { return d.target.x + 4 - marginLeft; })
-            .attr('y2', function(d) { return d.target.y + 3 - marginTop; });
+      link.attr('x1', function(d) { return d.source.x + 4 - marginLeft; })
+          .attr('y1', function(d) { return d.source.y + 3 - marginTop; })
+          .attr('x2', function(d) { return d.target.x + 4 - marginLeft; })
+          .attr('y2', function(d) { return d.target.y + 3 - marginTop; });
   })
 }
 $(function(){
