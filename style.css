@@ -2,12 +2,17 @@ body {
   background-color: #ff9966;
   text-align: center;
 }
-svg {
-  margin-top: 50px;
+graph {
   box-shadow: 3px 3px 44px #000;
+  margin-top: 50px;
 }
-
 .link {
-    stroke: #777;
-    stroke-width: 1px;
+  stroke: #777;
+  stroke-width: 1px;
+}
+img {
+  position: absolute;
+}
+.flag {
+  position: absolute;
 }
