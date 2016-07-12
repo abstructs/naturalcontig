@@ -10,13 +10,13 @@ var getData = function() {
 var createGraph = function(data) {
   var dragstarted = function(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-    d.fx = d.x;
-    d.fy = d.y;
+    d.fx = d.x - marginLeft;
+    d.fy = d.y - marginTop;
   }
 
   var dragged = function(d) {
-    d.fx = d3.event.x;
-    d.fy = d3.event.y;
+    d.fx = d3.event.x - marginLeft;
+    d.fy = d3.event.y - marginTop;
   }
 
   var dragended = function(d) {
@@ -29,16 +29,19 @@ var createGraph = function(data) {
       width = 1000 - margin.left - margin.right,
       height = 650 - margin.top - margin.bottom;
 
+  var marginTop = parseInt($('.graph').css('marginTop')),
+  marginLeft = parseInt($('.graph').css('marginLeft')); // sets the margins so nodes connect with lines
+
   var svg = d3.select('body').select('svg');
-  var div = d3.select('body').select('div');
+  var div = d3.select('body').select('.graph');
+
   svg
       .attr('height', height)
       .attr('width', width)
-      .style('background-color', 'white')
   div
-      .attr('height', height)
-      .attr('width', width)
-      .style('background-color', 'white')
+      .style('height', height)
+      .style('width', width)
+
 
   var simulation = d3.forceSimulation()
       .nodes(data.nodes)
@@ -64,13 +67,13 @@ var createGraph = function(data) {
     simulation.on('tick', function() {
         node.attr('height', 6)
             .attr('width', 8)
-            .style("left", function(d) { return d.x = Math.max(8, Math.min(width - 12, d.x)); })
-            .style("top", function(d) { return d.y = Math.max(6, Math.min(height - 10, d.y)); })
+            .style("left", function(d) { return d.x = Math.max(marginLeft, Math.min(width - 16, d.x) + marginLeft); })
+            .style("top", function(d) { return d.y = Math.max(marginTop, Math.min(height - 12, d.y) + marginTop); })
 
-        link.attr('x1', function(d) { return d.source.x + 4; })
-            .attr('y1', function(d) { return d.source.y + 3; })
-            .attr('x2', function(d) { return d.target.x + 4; })
-            .attr('y2', function(d) { return d.target.y + 3; });
+        link.attr('x1', function(d) { return d.source.x + 4 - marginLeft; })
+            .attr('y1', function(d) { return d.source.y + 3 - marginTop; })
+            .attr('x2', function(d) { return d.target.x + 4 - marginLeft; })
+            .attr('y2', function(d) { return d.target.y + 3 - marginTop; });
   })
 }
 $(function(){
